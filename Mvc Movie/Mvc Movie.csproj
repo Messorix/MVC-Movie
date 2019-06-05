@@ -148,8 +148,20 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Classes\Certifier.cs" />
-    <Compile Include="Classes\MyCertifierList.cs" />
+    <Compile Include="Classes\MyExtensions.cs" />
+    <Compile Include="Migrations\201906050940500_CertificationAdjustments.cs" />
+    <Compile Include="Migrations\201906050940500_CertificationAdjustments.Designer.cs">
+      <DependentUpon>201906050940500_CertificationAdjustments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906050948312_MovieParameterDeprecated.cs" />
+    <Compile Include="Migrations\201906050948312_MovieParameterDeprecated.Designer.cs">
+      <DependentUpon>201906050948312_MovieParameterDeprecated.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906051135481_AddedCombination.cs" />
+    <Compile Include="Migrations\201906051135481_AddedCombination.Designer.cs">
+      <DependentUpon>201906051135481_AddedCombination.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MovieRestriction.cs" />
     <Compile Include="Models\Restriction.cs" />
     <Compile Include="Classes\RestTalker.cs" />
     <Compile Include="Controllers\HelloWorldController.cs" />
@@ -341,6 +353,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906041233093_MovedISOField.resx">
       <DependentUpon>201906041233093_MovedISOField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906050940500_CertificationAdjustments.resx">
+      <DependentUpon>201906050940500_CertificationAdjustments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906050948312_MovieParameterDeprecated.resx">
+      <DependentUpon>201906050948312_MovieParameterDeprecated.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906051135481_AddedCombination.resx">
+      <DependentUpon>201906051135481_AddedCombination.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

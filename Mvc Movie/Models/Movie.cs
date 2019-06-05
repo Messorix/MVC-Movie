@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
-using Mvc_Movie.Classes;
 
 namespace MvcMovie.Models
 {
     public class Movie
     {
         public int ID { get; set; }
+
         public string IMDbID { get; set; }
 
         [StringLength(60, MinimumLength = 3)]
@@ -30,29 +30,29 @@ namespace MvcMovie.Models
         [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
         public decimal Price { get; set; }
 
-        [RegularExpression(@"^[A-Z]+[a-zA-Z'\s]*$")]
-        [StringLength(5)]
-        public string Rating { get; set; }
-
         [Display(Name = "IMDb Rating")]
         public string IMDbRating { get; set; }
-                
+
+        public List<Restriction> Restrictions { get; set; }
     }
 
     public class MovieDBContext : DbContext
     {
         public DbSet<Movie> Movies { get; set; }
-        public DbSet<Certifier> Certifiers { get; set; }
         public DbSet<Restriction> Restrictions { get; set; }
+        public DbSet<MovieRestriction> MovieRestrictions { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            /*
-            modelBuilder.Entity<Certifier>()
-            .HasRequired(m => m.ParentMovie)
-            .WithMany(m => m.Certifications)
-            .WillCascadeOnDelete(true);
-            */
+            /*modelBuilder.Entity<Movie>()
+                        .HasMany(m => m.Restrictions)
+                        .WithMany(r => r.Movies)
+                        .Map(mr =>
+                                {
+                                    mr.MapLeftKey("MovieID");
+                                    mr.MapRightKey("RestrictionID");
+                                    mr.ToTable("MovieRestriction");
+                                });*/
         }
     }
 }

@@ -37,41 +37,46 @@ namespace Mvc_Movie.Controllers
 
             var RatingLst = new List<string>();
 
-            var CertQry = from c in movieDB.Certifiers
-                          where c.Certification.ISO_3166_1 == CultureInfo.CurrentCulture.TwoLetterISOLanguageName
-                           select c.Certification.Certification;
+            var CertQry = from r in movieDB.Restrictions
+                          where r.ISO_3166_1 == CultureInfo.CurrentCulture.TwoLetterISOLanguageName
+                          select r.Certification;
 
             RatingLst.AddRange(CertQry.Distinct());
             ViewBag.movieRating = new SelectList(RatingLst);
-            //var movies = movieDB.Movies;
+
+
             var movies = from m in movieDB.Movies
                          select m;
 
-            //var certs = from c in movieDB.Certifiers
-            //            select c;
+            var restrictions = from r in movieDB.Restrictions
+                         select r;
 
-            //var rests = from r in movieDB.Restrictions
-            //            select r;
-            /*
+            var movRest = from mr in movieDB.MovieRestrictions
+                          select mr;
+
             foreach (var movie in movies.ToList())
             {
-                bool clearCerts = true;
-
-                foreach (var cert in certs.ToList())
+                foreach (var combi in movRest.Where(x => x.MovieID.Equals(movie.ID)))
                 {
-                    if (clearCerts)
-                    {
-                        movie.Certifications.Clear();
-                        clearCerts = false;
-                    }
-
-                    if (cert.ParentMovie.ID == movie.ID)
-                    {
-                        movie.Certifications.Add(cert);
-                    }
+                    movie.Restrictions.AddRange(restrictions.Where(y => y.ID.Equals(combi.RestrictionID)));
                 }
             }
+
+            /*var groupJoinQuery =
+               from movie in movieDB.Movies
+               orderby movie.ID
+               join rest in movieDB.Restrictions on movie.ID equals rest.ID into prodGroup
+               select new
+               {
+                   Category = category.Name,
+                   Products = from prod2 in prodGroup
+                              orderby prod2.Name
+                              select prod2
+               };
             */
+
+
+
             if (!String.IsNullOrEmpty(searchString))
             {
                 movies = movies.Where(s => s.Title.Contains(searchString));

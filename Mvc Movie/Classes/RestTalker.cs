@@ -65,7 +65,7 @@ namespace Mvc_Movie.Classes
                 dynamic resultGeneral = JsonConvert.DeserializeObject(response.Content);
                 var resultMovie = resultGeneral.results[0];
 
-                List<Certifier> restrictions = new List<Certifier>();
+                List<Restriction> restrictions = new List<Restriction>();
 
                 string imdbID = GetIMDBID(Convert.ToInt32(resultMovie.id), ref restrictions);
                 string imdbRating = resultMovie.vote_average;
@@ -76,12 +76,13 @@ namespace Mvc_Movie.Classes
                 movie.IMDbRating = imdbRating;
                 movie.Poster = poster;
                 movie.ReleaseDate = release;
+                movie.Restrictions = restrictions;
             }
 
             return movie;
         }
 
-        internal static string GetIMDBID(int id, ref List<Certifier> restrictions)
+        internal static string GetIMDBID(int id, ref List<Restriction> restrictions)
         {
             string returnable = "";
 
@@ -115,6 +116,7 @@ namespace Mvc_Movie.Classes
                                         ISO_3166_1 = cert.iso_3166_1.Value,
                                         Order = -1
                                     };
+                                    break;
                                 }
                                 else if (r.Certification == cert.release_dates[0].certification.Value)
                                 {
@@ -124,12 +126,7 @@ namespace Mvc_Movie.Classes
                             }
                         }
 
-                        Certifier rest = new Certifier()
-                        {
-                            Certification = restrict
-                        };
-
-                        restrictions.Add(rest);
+                        restrictions.Add(restrict);
                     }
                 }
 

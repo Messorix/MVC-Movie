@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Mvc_Movie.Classes
+namespace MvcMovie.Models
 {
     public class Restriction
     {
@@ -12,5 +12,6 @@ namespace Mvc_Movie.Classes
         public string Certification { get; set; }
         public string Description { get; set; }
         public int Order { get; set; }
+        public List<Movie> Movies { get; set; }
     }
 }

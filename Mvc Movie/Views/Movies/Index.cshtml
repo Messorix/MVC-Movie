@@ -59,7 +59,7 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @item..ToCertifierString()
+                @item.Restrictions.ToRestrictionString()
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IMDbRating)
