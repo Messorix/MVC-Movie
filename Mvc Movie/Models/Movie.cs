@@ -33,14 +33,13 @@ namespace MvcMovie.Models
         [Display(Name = "IMDb Rating")]
         public string IMDbRating { get; set; }
 
-        public List<Restriction> Restrictions { get; set; }
+       public virtual List<Restriction> Restrictions { get; set; }
     }
 
     public class MovieDBContext : DbContext
     {
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Restriction> Restrictions { get; set; }
-        public DbSet<MovieRestriction> MovieRestrictions { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

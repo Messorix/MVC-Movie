@@ -20,12 +20,14 @@ namespace Mvc_Movie.Controllers
         // GET: Movies
         public ActionResult Index(string movieRating, string movieGenre, string searchString, string sortOrder)
         {
-            /*if (movieDB.Restrictions.Count() == 0)
+            if (movieDB.Restrictions.Count() == 0)
             {
                 movieDB.Restrictions.AddRange(RestTalker.GetRestrictionsFromAPI());
                 movieDB.SaveChanges();
-            }*/
+            }
+
             movieDB.Configuration.LazyLoadingEnabled = false;
+
             var GenreLst = new List<string>();
 
             var GenreQry = from m in movieDB.Movies
@@ -51,10 +53,14 @@ namespace Mvc_Movie.Controllers
             var restrictions = from r in movieDB.Restrictions
                          select r;
 
-            var movRest = from mr in movieDB.MovieRestrictions
-                          select mr;
 
-            foreach (var movie in movies.ToList())
+            List<Movie> x1 = movies.ToList();
+            List<Restriction> y1 = restrictions.ToList();
+
+
+
+
+            /*foreach (var movie in movies.ToList())
             {
                 foreach (var combi in movRest.Where(x => x.MovieID.Equals(movie.ID)))
                 {

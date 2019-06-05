@@ -12,6 +12,6 @@ namespace MvcMovie.Models
         public string Certification { get; set; }
         public string Description { get; set; }
         public int Order { get; set; }
-        public List<Movie> Movies { get; set; }
+        public virtual List<Movie> Movies { get; set; }
     }
 }

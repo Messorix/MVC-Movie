@@ -7,13 +7,13 @@ namespace Mvc_Movie.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class AddedCombination : IMigrationMetadata
+    public sealed partial class AddCombiTable : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddedCombination));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddCombiTable));
         
         string IMigrationMetadata.Id
         {
-            get { return "201906051135481_AddedCombination"; }
+            get { return "201906051319168_AddCombiTable"; }
         }
         
         string IMigrationMetadata.Source

@@ -3,7 +3,7 @@ namespace Mvc_Movie.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class CertificationAdjustments : DbMigration
+    public partial class AddCombiTable : DbMigration
     {
         public override void Up()
         {
@@ -12,18 +12,19 @@ namespace Mvc_Movie.Migrations
             DropIndex("dbo.Certifiers", new[] { "Certification_ID" });
             DropIndex("dbo.Certifiers", new[] { "ParentMovie_ID" });
             CreateTable(
-                "dbo.MovieRestriction",
+                "dbo.RestrictionMovies",
                 c => new
                     {
-                        MovieID = c.Int(nullable: false),
-                        RestrictionID = c.Int(nullable: false),
+                        Restriction_ID = c.Int(nullable: false),
+                        Movie_ID = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => new { t.MovieID, t.RestrictionID })
-                .ForeignKey("dbo.Movies", t => t.MovieID, cascadeDelete: true)
-                .ForeignKey("dbo.Restrictions", t => t.RestrictionID, cascadeDelete: true)
-                .Index(t => t.MovieID)
-                .Index(t => t.RestrictionID);
+                .PrimaryKey(t => new { t.Restriction_ID, t.Movie_ID })
+                .ForeignKey("dbo.Restrictions", t => t.Restriction_ID, cascadeDelete: true)
+                .ForeignKey("dbo.Movies", t => t.Movie_ID, cascadeDelete: true)
+                .Index(t => t.Restriction_ID)
+                .Index(t => t.Movie_ID);
             
+            DropColumn("dbo.Movies", "Rating");
             DropTable("dbo.Certifiers");
         }
         
@@ -39,11 +40,12 @@ namespace Mvc_Movie.Migrations
                     })
                 .PrimaryKey(t => t.ID);
             
-            DropForeignKey("dbo.MovieRestriction", "RestrictionID", "dbo.Restrictions");
-            DropForeignKey("dbo.MovieRestriction", "MovieID", "dbo.Movies");
-            DropIndex("dbo.MovieRestriction", new[] { "RestrictionID" });
-            DropIndex("dbo.MovieRestriction", new[] { "MovieID" });
-            DropTable("dbo.MovieRestriction");
+            AddColumn("dbo.Movies", "Rating", c => c.String(maxLength: 5));
+            DropForeignKey("dbo.RestrictionMovies", "Movie_ID", "dbo.Movies");
+            DropForeignKey("dbo.RestrictionMovies", "Restriction_ID", "dbo.Restrictions");
+            DropIndex("dbo.RestrictionMovies", new[] { "Movie_ID" });
+            DropIndex("dbo.RestrictionMovies", new[] { "Restriction_ID" });
+            DropTable("dbo.RestrictionMovies");
             CreateIndex("dbo.Certifiers", "ParentMovie_ID");
             CreateIndex("dbo.Certifiers", "Certification_ID");
             AddForeignKey("dbo.Certifiers", "ParentMovie_ID", "dbo.Movies", "ID", cascadeDelete: true);

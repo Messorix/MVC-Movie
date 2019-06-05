@@ -7,13 +7,13 @@ namespace Mvc_Movie.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class MovieParameterDeprecated : IMigrationMetadata
+    public sealed partial class Reinit : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(MovieParameterDeprecated));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Reinit));
         
         string IMigrationMetadata.Id
         {
-            get { return "201906050948312_MovieParameterDeprecated"; }
+            get { return "201906051203342_Re-init"; }
         }
         
         string IMigrationMetadata.Source
