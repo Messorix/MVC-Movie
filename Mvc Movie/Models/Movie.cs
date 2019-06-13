@@ -1,12 +1,17 @@
-﻿using System;
+﻿using Mvc_Movie.Classes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
 
 namespace MvcMovie.Models
 {
-    public class Movie
+    public class Movie : PropertyHandler
     {
+        public Movie()
+        {
+            PropertyCount = 7;
+        }
+
         public int ID { get; set; }
 
         public string IMDbID { get; set; }
@@ -21,37 +26,15 @@ namespace MvcMovie.Models
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ReleaseDate { get; set; }
 
-        [RegularExpression(@"^[A-Z]+[a-zA-Z'\s]*$")]
-        [Required]
-        [StringLength(30)]
-        public string Genre { get; set; }
-
         [DataType(DataType.Currency)]
         [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
         public decimal Price { get; set; }
 
         [Display(Name = "IMDb Rating")]
-        public string IMDbRating { get; set; }
+        public decimal IMDbRating { get; set; }
+        
+        public List<Genre> Genres { get; set; }
 
-       public virtual List<Restriction> Restrictions { get; set; }
-    }
-
-    public class MovieDBContext : DbContext
-    {
-        public DbSet<Movie> Movies { get; set; }
-        public DbSet<Restriction> Restrictions { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            /*modelBuilder.Entity<Movie>()
-                        .HasMany(m => m.Restrictions)
-                        .WithMany(r => r.Movies)
-                        .Map(mr =>
-                                {
-                                    mr.MapLeftKey("MovieID");
-                                    mr.MapRightKey("RestrictionID");
-                                    mr.ToTable("MovieRestriction");
-                                });*/
-        }
+        public List<Restriction> Restrictions { get; set; }
     }
 }

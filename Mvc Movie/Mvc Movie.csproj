@@ -148,11 +148,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Classes\DataController.cs" />
     <Compile Include="Classes\MyExtensions.cs" />
-    <Compile Include="Migrations\201906051319168_AddCombiTable.cs" />
-    <Compile Include="Migrations\201906051319168_AddCombiTable.Designer.cs">
-      <DependentUpon>201906051319168_AddCombiTable.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Classes\PropertyHandler.cs" />
+    <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\Restriction.cs" />
     <Compile Include="Classes\RestTalker.cs" />
     <Compile Include="Controllers\HelloWorldController.cs" />
@@ -161,67 +160,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905281425411_Initial.cs" />
-    <Compile Include="Migrations\201905281425411_Initial.Designer.cs">
-      <DependentUpon>201905281425411_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905281432585_Rating.cs" />
-    <Compile Include="Migrations\201905281432585_Rating.Designer.cs">
-      <DependentUpon>201905281432585_Rating.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905281442244_DataAnnotations.cs" />
-    <Compile Include="Migrations\201905281442244_DataAnnotations.Designer.cs">
-      <DependentUpon>201905281442244_DataAnnotations.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905290802530_IMDbIntegration.cs" />
-    <Compile Include="Migrations\201905290802530_IMDbIntegration.Designer.cs">
-      <DependentUpon>201905290802530_IMDbIntegration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905291124012_IMDbAdjustments.cs" />
-    <Compile Include="Migrations\201905291124012_IMDbAdjustments.Designer.cs">
-      <DependentUpon>201905291124012_IMDbAdjustments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905291233534_TypeAdjustment.cs" />
-    <Compile Include="Migrations\201905291233534_TypeAdjustment.Designer.cs">
-      <DependentUpon>201905291233534_TypeAdjustment.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905291517167_AddedCertification.cs" />
-    <Compile Include="Migrations\201905291517167_AddedCertification.Designer.cs">
-      <DependentUpon>201905291517167_AddedCertification.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906040722381_CascadeOnDeleteForCertifications.cs" />
-    <Compile Include="Migrations\201906040722381_CascadeOnDeleteForCertifications.Designer.cs">
-      <DependentUpon>201906040722381_CascadeOnDeleteForCertifications.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906040829437_DataTypeForCurrency.cs" />
-    <Compile Include="Migrations\201906040829437_DataTypeForCurrency.Designer.cs">
-      <DependentUpon>201906040829437_DataTypeForCurrency.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906040835079_DataTypeForCurrencyRevert.cs" />
-    <Compile Include="Migrations\201906040835079_DataTypeForCurrencyRevert.Designer.cs">
-      <DependentUpon>201906040835079_DataTypeForCurrencyRevert.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906040932518_CertificationAdjustment.cs" />
-    <Compile Include="Migrations\201906040932518_CertificationAdjustment.Designer.cs">
-      <DependentUpon>201906040932518_CertificationAdjustment.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906040957110_MovieDBContextAdjustment.cs" />
-    <Compile Include="Migrations\201906040957110_MovieDBContextAdjustment.Designer.cs">
-      <DependentUpon>201906040957110_MovieDBContextAdjustment.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906041203048_AddRestriction.cs" />
-    <Compile Include="Migrations\201906041203048_AddRestriction.Designer.cs">
-      <DependentUpon>201906041203048_AddRestriction.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906041205300_AdjustedRestrictionAndCertifier.cs" />
-    <Compile Include="Migrations\201906041205300_AdjustedRestrictionAndCertifier.Designer.cs">
-      <DependentUpon>201906041205300_AdjustedRestrictionAndCertifier.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906041233093_MovedISOField.cs" />
-    <Compile Include="Migrations\201906041233093_MovedISOField.Designer.cs">
-      <DependentUpon>201906041233093_MovedISOField.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -301,54 +239,10 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201905281425411_Initial.resx">
-      <DependentUpon>201905281425411_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905281432585_Rating.resx">
-      <DependentUpon>201905281432585_Rating.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905281442244_DataAnnotations.resx">
-      <DependentUpon>201905281442244_DataAnnotations.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905290802530_IMDbIntegration.resx">
-      <DependentUpon>201905290802530_IMDbIntegration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905291124012_IMDbAdjustments.resx">
-      <DependentUpon>201905291124012_IMDbAdjustments.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905291233534_TypeAdjustment.resx">
-      <DependentUpon>201905291233534_TypeAdjustment.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905291517167_AddedCertification.resx">
-      <DependentUpon>201905291517167_AddedCertification.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906040722381_CascadeOnDeleteForCertifications.resx">
-      <DependentUpon>201906040722381_CascadeOnDeleteForCertifications.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906040829437_DataTypeForCurrency.resx">
-      <DependentUpon>201906040829437_DataTypeForCurrency.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906040835079_DataTypeForCurrencyRevert.resx">
-      <DependentUpon>201906040835079_DataTypeForCurrencyRevert.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906040932518_CertificationAdjustment.resx">
-      <DependentUpon>201906040932518_CertificationAdjustment.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906040957110_MovieDBContextAdjustment.resx">
-      <DependentUpon>201906040957110_MovieDBContextAdjustment.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906041203048_AddRestriction.resx">
-      <DependentUpon>201906041203048_AddRestriction.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906041205300_AdjustedRestrictionAndCertifier.resx">
-      <DependentUpon>201906041205300_AdjustedRestrictionAndCertifier.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906041233093_MovedISOField.resx">
-      <DependentUpon>201906041233093_MovedISOField.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906051319168_AddCombiTable.resx">
-      <DependentUpon>201906051319168_AddCombiTable.cs</DependentUpon>
-    </EmbeddedResource>
+    <ProjectReference Include="..\DataConnector\DataConnector.csproj">
+      <Project>{34441CBF-03FA-4D6A-BC3A-D25AED978263}</Project>
+      <Name>DataConnector</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

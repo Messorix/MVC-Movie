@@ -1,11 +1,8 @@
 ﻿using Mvc_Movie.Classes;
 using MvcMovie.Models;
-using Newtonsoft.Json;
-using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -15,31 +12,28 @@ namespace Mvc_Movie.Controllers
 {
     public class MoviesController : Controller
     {
-        private MovieDBContext movieDB = new MovieDBContext();
+        private DataController dataController = new DataController();
 
         // GET: Movies
         public ActionResult Index(string movieRating, string movieGenre, string searchString, string sortOrder)
         {
-            if (movieDB.Restrictions.Count() == 0)
+            if (dataController.Restrictions.Count() == 0)
             {
-                movieDB.Restrictions.AddRange(RestTalker.GetRestrictionsFromAPI());
-                movieDB.SaveChanges();
+                dataController.Restrictions.AddRange(RestTalker.GetRestrictionsFromAPI());
             }
-
-            movieDB.Configuration.LazyLoadingEnabled = false;
 
             var GenreLst = new List<string>();
 
-            var GenreQry = from m in movieDB.Movies
+            /*var GenreQry = from m in dataController.Movies
                            orderby m.Genre
                            select m.Genre;
             
             GenreLst.AddRange(GenreQry.Distinct());
-            ViewBag.movieGenre = new SelectList(GenreLst);
+            ViewBag.movieGenre = new SelectList(GenreLst);*/
 
             var RatingLst = new List<string>();
 
-            var CertQry = from r in movieDB.Restrictions
+            var CertQry = from r in dataController.Restrictions
                           where r.ISO_3166_1 == CultureInfo.CurrentCulture.TwoLetterISOLanguageName
                           select r.Certification;
 
@@ -47,11 +41,11 @@ namespace Mvc_Movie.Controllers
             ViewBag.movieRating = new SelectList(RatingLst);
 
 
-            var movies = from m in movieDB.Movies
+            var movies = from m in dataController.Movies
                          select m;
 
-            var restrictions = from r in movieDB.Restrictions
-                         select r;
+            var restrictions = from r in dataController.Restrictions
+                               select r;
 
 
             List<Movie> x1 = movies.ToList();
@@ -88,10 +82,10 @@ namespace Mvc_Movie.Controllers
                 movies = movies.Where(s => s.Title.Contains(searchString));
             }
 
-            if (!string.IsNullOrEmpty(movieGenre))
+            /*if (!string.IsNullOrEmpty(movieGenre))
             {
                 movies = movies.Where(x => x.Genre == movieGenre);
-            }
+            }*/
 
             if (!string.IsNullOrEmpty(movieRating))
             {
@@ -138,7 +132,9 @@ namespace Mvc_Movie.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = movieDB.Movies.Find(id);
+
+            Movie movie = dataController.Movies.Single(x => x.ID.Equals(id));
+
             if (movie == null)
             {
                 return HttpNotFound();
@@ -162,9 +158,8 @@ namespace Mvc_Movie.Controllers
             if (ModelState.IsValid)
             {
                 movie = RestTalker.GetIMDB(movie);
-
-                movieDB.Movies.Add(movie);
-                movieDB.SaveChanges();
+                dataController.AddMovie(movie);
+                //movieDB.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -178,7 +173,7 @@ namespace Mvc_Movie.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = movieDB.Movies.Find(id);
+            Movie movie = dataController.Movies.Single(x => x.ID.Equals(id));
             if (movie == null)
             {
                 return HttpNotFound();
@@ -195,8 +190,8 @@ namespace Mvc_Movie.Controllers
         {
             if (ModelState.IsValid)
             {
-                movieDB.Entry(movie).State = EntityState.Modified;
-                movieDB.SaveChanges();
+                //movieDB.Entry(movie).State = EntityState.Modified;
+                //movieDB.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(movie);
@@ -209,7 +204,7 @@ namespace Mvc_Movie.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = movieDB.Movies.Find(id);
+            Movie movie = dataController.Movies.Single(x => x.ID.Equals(id));
             if (movie == null)
             {
                 return HttpNotFound();
@@ -222,9 +217,9 @@ namespace Mvc_Movie.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Movie movie = movieDB.Movies.Find(id);
-            movieDB.Movies.Remove(movie);
-            movieDB.SaveChanges();
+            Movie movie = dataController.Movies.Single(x => x.ID.Equals(id));
+            //dataController.GetData<Movie>("Movies").Remove(movie);
+            //movieDB.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -232,7 +227,7 @@ namespace Mvc_Movie.Controllers
         {
             if (disposing)
             {
-                movieDB.Dispose();
+                //movieDB.Dispose();
             }
             base.Dispose(disposing);
         }

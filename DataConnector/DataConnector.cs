@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
@@ -11,30 +12,62 @@ namespace DataConnectorNS
         #region Singleton
         private DataConnector() { }
 
-        private static DataConnector instance = new DataConnector();
-
-        public static DataConnector Instance {
-            get {
-                return instance;
-            }
-        }
+        public static DataConnector Instance { get; } = new DataConnector();
         #endregion
 
-        private static SqlCommand command { get; set; }
-
-        public static ConnectionState TestConnection()
+        private static SqlCommand Command { get; set; }
+        private static SqlConnection Connection
         {
-            return command.Connection.State;
+            get
+            {
+                return new SqlConnection(ConfigurationManager.ConnectionStrings["MvcMovie"].ConnectionString);
+            }
+        }
+        private static string Query { get; set; }
+
+        private static void OpenConnection()
+        {
+            if (Command.Connection.State != ConnectionState.Open)
+                Command.Connection.Open();
         }
 
-        private static void CreateCommand(string queryString, string connectionString)
+        private static int GetRowCount(string tableName)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            string sql = "SELECT COUNT(*) FROM " + tableName;
+
+            Command = new SqlCommand(sql, Connection);
+            OpenConnection();
+            int rowCount = (int)Command.ExecuteScalar();
+
+            Connection.Close();
+            return rowCount;
+        }
+        
+        public static string[,] GetData(string tableName)
+        {
+            int rowCount = GetRowCount(tableName);
+
+            Query = "SELECT * " +
+                    "FROM " + tableName;
+
+            Command = new SqlCommand(Query, Connection);
+            OpenConnection();
+
+            SqlDataReader reader = Command.ExecuteReader();
+            string[,] returnable = new string[rowCount, reader.FieldCount];
+            int row = 0;
+
+            while (reader.Read())
             {
-                command = new SqlCommand(queryString, connection);
-                command.Connection.Open();
-                command.ExecuteNonQuery();
+                for (int column = 0; column < reader.FieldCount; column++)
+                {
+                    returnable[row, column] = reader[column].ToString();
+                }
+
+                row++;
             }
+
+            return returnable;
         }
     }
 }

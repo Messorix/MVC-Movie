@@ -68,7 +68,7 @@ namespace Mvc_Movie.Classes
                 List<Restriction> restrictions = new List<Restriction>();
 
                 string imdbID = GetIMDBID(Convert.ToInt32(resultMovie.id), ref restrictions);
-                string imdbRating = resultMovie.vote_average;
+                decimal imdbRating = resultMovie.vote_average;
                 string poster = "https://image.tmdb.org/t/p/w185" + resultMovie.poster_path;
                 DateTime release = resultMovie.release_date;
 
@@ -138,7 +138,7 @@ namespace Mvc_Movie.Classes
 
         private static void GetRestrictionsFromDB()
         {
-            var x = from r in new MovieDBContext().Restrictions
+            var x = from r in new DataController().Restrictions
                     select r;
 
             foreach (var rest in x.ToList())
