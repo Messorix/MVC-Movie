@@ -6,6 +6,12 @@ END
 USE MvcMovie
 GO
 
+DROP TABLE MovieRestrictions
+DROP TABLE MovieGenres
+DROP TABLE Movies
+DROP TABLE Restrictions
+DROP TABLE Genres
+
 CREATE TABLE Movies
 (
 	[MovieID]		int PRIMARY KEY,
@@ -22,7 +28,7 @@ CREATE TABLE Restrictions
 	[RestrictionID]	int PRIMARY KEY,
 	[Locale]		varchar(25) NOT NULL,
 	[Certification]	varchar(25) NOT NULL,
-	[Description]	varchar(255),
+	[Description]	varchar(MAX),
 	[Sequence]		smallint
 )
 

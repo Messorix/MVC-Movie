@@ -10,8 +10,6 @@ namespace Mvc_Movie.Classes
 {
     public class RestTalker
     {
-        private static List<Restriction> _restrictions = new List<Restriction>();
-
         private static IRestResponse GetResponse(string url)
         {
             var client = new RestClient(url);
@@ -53,7 +51,32 @@ namespace Mvc_Movie.Classes
             return returnable;
         }
 
-        internal static Movie GetIMDB(Movie movie)
+        internal static List<Genre> GetGenresFromAPI()
+        {
+            List<Genre> returnable = new List<Genre>();
+
+            IRestResponse response = GetResponse("https://api.themoviedb.org/3/genre/movie/list?api_key=f2f0cf300300555b253b3e509fae67ae&language=en-US");
+
+            if (response.IsSuccessful)
+            {
+                dynamic result = JsonConvert.DeserializeObject(response.Content);
+
+                foreach (dynamic g in result.genres)
+                {
+                    Genre genre = new Genre
+                    {
+                        ID = g.id,
+                        Name = g.name
+                    };
+
+                    returnable.Add(genre);
+                }
+            }
+
+            return returnable;
+        }
+
+        internal static Movie GetIMDB(Movie movie, List<Restriction> restrictionsFromDB, List<Genre> genresFromDB)
         {
             string title = movie.Title.Replace(" ", "%20");
             title = title.Replace(":", "%3A");
@@ -66,30 +89,39 @@ namespace Mvc_Movie.Classes
                 var resultMovie = resultGeneral.results[0];
 
                 List<Restriction> restrictions = new List<Restriction>();
+                List<Genre> genres = new List<Genre>();
 
-                string imdbID = GetIMDBID(Convert.ToInt32(resultMovie.id), ref restrictions);
+                string imdbID = GetIMDBID(Convert.ToInt32(resultMovie.id), ref restrictions, restrictionsFromDB);
                 decimal imdbRating = resultMovie.vote_average;
                 string poster = "https://image.tmdb.org/t/p/w185" + resultMovie.poster_path;
                 DateTime release = resultMovie.release_date;
+
+                foreach (dynamic genre in resultMovie.genre_ids)
+                {
+                    foreach (Genre genreDB in genresFromDB)
+                    {
+                        if (genre == genreDB.ID)
+                        {
+                            genres.Add(genreDB);
+                            break;
+                        }
+                    }
+                }
 
                 movie.IMDbID = imdbID;
                 movie.IMDbRating = imdbRating;
                 movie.Poster = poster;
                 movie.ReleaseDate = release;
                 movie.Restrictions = restrictions;
+                movie.Genres = genres;
             }
 
             return movie;
         }
 
-        internal static string GetIMDBID(int id, ref List<Restriction> restrictions)
+        internal static string GetIMDBID(int id, ref List<Restriction> restrictions, List<Restriction> restrictionsFromDB)
         {
             string returnable = "";
-
-            if (_restrictions.Count == 0)
-            {
-                GetRestrictionsFromDB();
-            }
 
             IRestResponse response = GetResponse("https://api.themoviedb.org/3/movie/" + id + "?api_key=f2f0cf300300555b253b3e509fae67ae&append_to_response=release_dates");
 
@@ -101,21 +133,46 @@ namespace Mvc_Movie.Classes
                 {
                     if (cert.iso_3166_1 == "NL" || cert.iso_3166_1 == "US")
                     {
+                        Restriction restUnknown = null;
+                        int ID = 0;
+
+                        foreach (Restriction r in restrictionsFromDB)
+                        {
+                            if (r.ISO_3166_1 == cert.iso_3166_1.Value &&
+                                r.Certification == "N/A")
+                            {
+                                restUnknown = r;
+                            }
+
+                            if (r.ID > ID)
+                            {
+                                ID = r.ID + 1;
+                            }
+                        }
+
                         Restriction restrict = null;
 
-                        foreach (Restriction r in _restrictions)
+                        foreach (Restriction r in restrictionsFromDB)
                         {
                             if (r.ISO_3166_1 == cert.iso_3166_1.Value)
                             {
                                 if (string.IsNullOrEmpty(cert.release_dates[0].certification.Value))
                                 {
-                                    restrict = new Restriction
+                                    if (restUnknown != null)
                                     {
-                                        Certification = "N/A",
-                                        Description = "Not available",
-                                        ISO_3166_1 = cert.iso_3166_1.Value,
-                                        Order = -1
-                                    };
+                                        restrict = restUnknown;
+                                    }
+                                    else
+                                    {
+                                        restrict = new Restriction
+                                        {
+                                            ID = ID,
+                                            Certification = "N/A",
+                                            Description = "Not available",
+                                            ISO_3166_1 = cert.iso_3166_1.Value,
+                                            Order = -1
+                                        };
+                                    }
                                     break;
                                 }
                                 else if (r.Certification == cert.release_dates[0].certification.Value)
@@ -134,17 +191,6 @@ namespace Mvc_Movie.Classes
             }
 
             return returnable;
-        }
-
-        private static void GetRestrictionsFromDB()
-        {
-            var x = from r in new DataController().Restrictions
-                    select r;
-
-            foreach (var rest in x.ToList())
-            {
-                _restrictions.Add(rest);
-            }
         }
     }
 }

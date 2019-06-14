@@ -2,14 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Linq;
 
 namespace MvcMovie.Models
 {
-    public class Movie : PropertyHandler
+    public class Movie
     {
         public Movie()
         {
-            PropertyCount = 7;
+            Restrictions = new List<Restriction>();
+            Genres = new List<Genre>();
         }
 
         public int ID { get; set; }
@@ -36,5 +39,20 @@ namespace MvcMovie.Models
         public List<Genre> Genres { get; set; }
 
         public List<Restriction> Restrictions { get; set; }
+
+        public string Restriction
+        {
+            get
+            {
+                foreach (Restriction r in Restrictions)
+                {
+                    if (r.ISO_3166_1.ToLower() == CultureInfo.CurrentCulture.TwoLetterISOLanguageName)
+                    {
+                        return r.Certification;
+                    }
+                }
+                return null;
+            }
+        }
     }
 }

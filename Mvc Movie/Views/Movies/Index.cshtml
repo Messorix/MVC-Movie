@@ -14,7 +14,7 @@
     @using (Html.BeginForm("Index", "Movies", FormMethod.Get))
     {
         <p>
-            Genre: @Html.DropDownList("movieGenre", "All")
+            @*Genre: @Html.DropDownList("movieGenre", "All")*@
             Rating: @Html.DropDownList("movieRating", "All")
             Title: @Html.TextBox("SearchString") <br />
             <input type="submit" value="Filter" />
@@ -29,7 +29,7 @@
                 @Html.ActionLink("Release Date", "Index", new { sortOrder = ViewBag.DateSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genre)
+                @Html.DisplayNameFor(model => model.Genres)
             </th>
             <th>
                 @Html.ActionLink("Price", "Index", new { sortOrder = ViewBag.PriceSortParm })
@@ -52,14 +52,19 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ReleaseDate)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre)
+           *<td>
+                <ul>
+                    @foreach (var g in item.Genres)
+                    {
+                        <li>@Html.DisplayFor(modelItem => g.Name)</li>
+                    }
+                </ul>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @item.Restrictions.ToRestrictionString()
+                @Html.DisplayFor(modelItem => item.Restriction)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IMDbRating)

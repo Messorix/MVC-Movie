@@ -17,9 +17,34 @@ namespace Mvc_Movie.Controllers
         // GET: Movies
         public ActionResult Index(string movieRating, string movieGenre, string searchString, string sortOrder)
         {
-            if (dataController.Restrictions.Count() == 0)
+            List<Restriction> restFromAPI = RestTalker.GetRestrictionsFromAPI();
+
+            if (dataController.Restrictions.Count < restFromAPI.Count)
             {
-                dataController.Restrictions.AddRange(RestTalker.GetRestrictionsFromAPI());
+                restFromAPI.RemoveRange(0, dataController.Restrictions.Count);
+
+                foreach (Restriction r in restFromAPI)
+                {
+                    if (dataController.AddRestriction(r) > 0)
+                    {
+                        dataController.Restrictions.Add(r);
+                    }
+                }
+            }
+
+            List<Genre> genreFromAPI = RestTalker.GetGenresFromAPI();
+
+            if (dataController.Genres.Count < genreFromAPI.Count)
+            {
+                genreFromAPI.RemoveRange(0, dataController.Genres.Count);
+
+                foreach (Genre g in genreFromAPI)
+                {
+                    if (dataController.AddGenre(g) > 0)
+                    {
+                        dataController.Genres.Add(g);
+                    }
+                }
             }
 
             var GenreLst = new List<string>();
@@ -96,7 +121,7 @@ namespace Mvc_Movie.Controllers
                         */
             }
 
-            ViewBag.TitleSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.TitleSortParm = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
             ViewBag.PriceSortParm = sortOrder == "Price" ? "price_desc" : "Price";
 
@@ -157,9 +182,9 @@ namespace Mvc_Movie.Controllers
         {
             if (ModelState.IsValid)
             {
-                movie = RestTalker.GetIMDB(movie);
+                movie = RestTalker.GetIMDB(movie, dataController.Restrictions, dataController.Genres);
                 dataController.AddMovie(movie);
-                //movieDB.SaveChanges();
+
                 return RedirectToAction("Index");
             }
 
