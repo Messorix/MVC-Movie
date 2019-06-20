@@ -14,7 +14,7 @@
     @using (Html.BeginForm("Index", "Movies", FormMethod.Get))
     {
         <p>
-            @*Genre: @Html.DropDownList("movieGenre", "All")*@
+            Genre: @Html.DropDownList("movieGenre", "All")
             Rating: @Html.DropDownList("movieRating", "All")
             Title: @Html.TextBox("SearchString") <br />
             <input type="submit" value="Filter" />
@@ -52,7 +52,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ReleaseDate)
             </td>
-           *<td>
+            <td>
                 <ul>
                     @foreach (var g in item.Genres)
                     {

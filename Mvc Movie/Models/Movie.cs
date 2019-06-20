@@ -38,8 +38,10 @@ namespace MvcMovie.Models
         
         public List<Genre> Genres { get; set; }
 
+        [Display(Name = "Certification")]
         public List<Restriction> Restrictions { get; set; }
 
+        [Display(Name = "Certification")]
         public string Restriction
         {
             get

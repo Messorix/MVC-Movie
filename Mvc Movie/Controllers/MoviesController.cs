@@ -49,76 +49,80 @@ namespace Mvc_Movie.Controllers
 
             var GenreLst = new List<string>();
 
-            /*var GenreQry = from m in dataController.Movies
-                           orderby m.Genre
-                           select m.Genre;
+            var GenreQry = from m in dataController.Genres
+                           orderby m.Name
+                           select m.Name;
             
             GenreLst.AddRange(GenreQry.Distinct());
-            ViewBag.movieGenre = new SelectList(GenreLst);*/
+            ViewBag.movieGenre = new SelectList(GenreLst);
 
             var RatingLst = new List<string>();
 
             var CertQry = from r in dataController.Restrictions
-                          where r.ISO_3166_1 == CultureInfo.CurrentCulture.TwoLetterISOLanguageName
+                          where r.ISO_3166_1 == CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToUpper()
                           select r.Certification;
 
             RatingLst.AddRange(CertQry.Distinct());
             ViewBag.movieRating = new SelectList(RatingLst);
-
-
+            
             var movies = from m in dataController.Movies
                          select m;
 
             var restrictions = from r in dataController.Restrictions
                                select r;
-
-
-            List<Movie> x1 = movies.ToList();
-            List<Restriction> y1 = restrictions.ToList();
-
-
-
-
-            /*foreach (var movie in movies.ToList())
-            {
-                foreach (var combi in movRest.Where(x => x.MovieID.Equals(movie.ID)))
-                {
-                    movie.Restrictions.AddRange(restrictions.Where(y => y.ID.Equals(combi.RestrictionID)));
-                }
-            }
-
-            /*var groupJoinQuery =
-               from movie in movieDB.Movies
-               orderby movie.ID
-               join rest in movieDB.Restrictions on movie.ID equals rest.ID into prodGroup
-               select new
-               {
-                   Category = category.Name,
-                   Products = from prod2 in prodGroup
-                              orderby prod2.Name
-                              select prod2
-               };
-            */
-
-
-
+            
             if (!String.IsNullOrEmpty(searchString))
             {
                 movies = movies.Where(s => s.Title.Contains(searchString));
             }
 
-            /*if (!string.IsNullOrEmpty(movieGenre))
+            if (!string.IsNullOrEmpty(movieGenre))
             {
-                movies = movies.Where(x => x.Genre == movieGenre);
-            }*/
+                List<Movie> x1 = new List<Movie>();
+
+                foreach (Movie m in movies)
+                {
+                    foreach (Genre g in m.Genres)
+                    {
+                        if (g.Name.Equals(movieGenre))
+                        {
+                            x1.Add(m);
+                            break;
+                        }
+                    }
+                }
+
+                movies = x1;
+            }
 
             if (!string.IsNullOrEmpty(movieRating))
             {
-                /*
-                movies = movies.Where
-                    (x => x.Certifications.Where
-                        (y => y.Certification.ISO_3166_1 == CultureInfo.CurrentCulture.TwoLetterISOLanguageName).FirstOrDefault().Certification.Certification == movieRating);
-                        */
+                int restrictionOrder = 0;
+
+                foreach (Restriction r in dataController.Restrictions.Where(rx => rx.ISO_3166_1 == CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToUpper()))
+                {
+                    if (r.Certification.Equals(movieRating))
+                    {
+                        restrictionOrder = r.Order;
+                        break;
+                    }
+                }
+
+                List<Movie> x = new List<Movie>();
+
+                foreach (Movie m in movies)
+                {
+                    foreach (Restriction r in m.Restrictions)
+                    {
+                        if (r.Order >= Convert.ToInt32(restrictionOrder))
+                        {
+                            x.Add(m);
+                            break;
+                        }
+                    }
+                }
+
+                movies = x;
             }
 
             ViewBag.TitleSortParm = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";

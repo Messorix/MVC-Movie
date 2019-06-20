@@ -33,80 +33,112 @@ namespace DataConnectorNS
 
         private static int GetRowCount(string tableName)
         {
-            string sql = "SELECT COUNT(*) FROM " + tableName;
+            int rowCount = 0;
 
-            Command = new SqlCommand(sql, Connection);
-            OpenConnection();
-            int rowCount = (int)Command.ExecuteScalar();
+            try
+            {
+                string sql = "SELECT COUNT(*) FROM " + tableName;
 
-            Connection.Close();
+                Command = new SqlCommand(sql, Connection);
+                OpenConnection();
+                rowCount = (int)Command.ExecuteScalar();
+            }
+            finally
+            {
+                Connection.Close();
+            }
+
             return rowCount;
         }
 
         private static int GetRowCount(string tableName, string columnName, dynamic value)
         {
-            string sql = "SELECT COUNT(*) FROM " + tableName + " WHERE " + columnName + " = '" + value + "'";
+            int rowCount = 0;
 
-            Command = new SqlCommand(sql, Connection);
-            OpenConnection();
-            int rowCount = (int)Command.ExecuteScalar();
+            try
+            {
+                string sql = "SELECT COUNT(*) FROM " + tableName + " WHERE " + columnName + " = '" + value + "'";
 
-            Connection.Close();
+                Command = new SqlCommand(sql, Connection);
+                OpenConnection();
+                rowCount = (int)Command.ExecuteScalar();
+            }
+            finally
+            {
+                Connection.Close();
+            }
+
             return rowCount;
         }
 
         public static string[,] GetData(string tableName)
         {
-            int rowCount = GetRowCount(tableName);
+            string[,] returnable = null;
 
-            Query = "SELECT * " +
-                    "FROM " + tableName;
-
-            Command = new SqlCommand(Query, Connection);
-            OpenConnection();
-
-            SqlDataReader reader = Command.ExecuteReader();
-            string[,] returnable = new string[rowCount, reader.FieldCount];
-            int row = 0;
-
-            while (reader.Read())
+            try
             {
-                for (int column = 0; column < reader.FieldCount; column++)
-                {
-                    returnable[row, column] = reader[column].ToString();
-                }
+                int rowCount = GetRowCount(tableName);
 
-                row++;
+                Query = "SELECT * " +
+                        "FROM " + tableName;
+
+                Command = new SqlCommand(Query, Connection);
+                OpenConnection();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                returnable = new string[rowCount, reader.FieldCount];
+                int row = 0;
+
+                while (reader.Read())
+                {
+                    for (int column = 0; column < reader.FieldCount; column++)
+                    {
+                        returnable[row, column] = reader[column].ToString();
+                    }
+
+                    row++;
+                }
+            }
+            finally
+            {
+                Connection.Close();
             }
 
-            Connection.Close();
             return returnable;
         }
 
         public static string[,] GetDataWithWhere(string query, string tableName, string columnName, dynamic value)
         {
-            int rowCount = GetRowCount(tableName, columnName, value);
+            string[,] returnable = null;
 
-            Query = query;
-
-            Command = new SqlCommand(Query, Connection);
-            OpenConnection();
-
-            SqlDataReader reader = Command.ExecuteReader();
-            string[,] returnable = new string[rowCount, reader.FieldCount];
-            int row = 0;
-
-            while (reader.Read())
+            try
             {
-                for (int column = 0; column < reader.FieldCount; column++)
-                {
-                    returnable[row, column] = reader[column].ToString();
-                }
+                int rowCount = GetRowCount(tableName, columnName, value);
 
-                row++;
+                Query = query;
+
+                Command = new SqlCommand(Query, Connection);
+                OpenConnection();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                returnable = new string[rowCount, reader.FieldCount];
+                int row = 0;
+
+                while (reader.Read())
+                {
+                    for (int column = 0; column < reader.FieldCount; column++)
+                    {
+                        returnable[row, column] = reader[column].ToString();
+                    }
+
+                    row++;
+                }
+            }
+            finally
+            {
+                Connection.Close();
             }
 
-            Connection.Close();
             return returnable;
         }
 

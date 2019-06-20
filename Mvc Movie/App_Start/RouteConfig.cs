@@ -20,9 +20,16 @@ namespace Mvc_Movie
             );
 
             routes.MapRoute(
-                 name: "Hello",
-                 url: "{controller}/{action}/{name}/{numTimes}"
-             );
+                name: "Comments",
+                url: "comments",
+                defaults: new { controller = "Home", action = "Comments" }
+            );
+
+            routes.MapRoute(
+                name: "NewComment",
+                url: "addcomment",
+                defaults: new { controller = "Home", action = "AddComment" }
+            );
         }
     }
 }
